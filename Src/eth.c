@@ -1,13 +1,13 @@
 #include "eth.h"
 
 
-void eth_send(char *str, size_t size){
+void ethSend(char *str, size_t size){
     netconn_write(newconn, str, size, NETCONN_COPY);
 } 
 
-void tcpecho(void)
+void tcpEcho(void)
 {
-   // struct netconn *conn, *newconn;
+   /* struct netconn *conn, *newconn;*/
     err_t err, accept_err;
     struct netbuf* buf;
     void* data;
@@ -40,7 +40,7 @@ void tcpecho(void)
                         {
                             netbuf_data(buf, &data, &len);
                             netconn_write(newconn, data, len, NETCONN_COPY);
-                            command_handler(eth_send,data);
+                            commandHandler(ethSend,data);
                             HAL_UART_Transmit(&huart3, data, len,100);
 
                         } while (netbuf_next(buf) >= 0);
@@ -66,7 +66,7 @@ void tcpecho(void)
     }
 }
 
-void tcpcounter(void)
+void tcpCounter(void)
 {
     struct netconn *conn, *newconn;
     err_t err, accept_err;

@@ -10,8 +10,8 @@
 #define NUM 256
 uint16_t adc_data[NUM];
 //char adc_data_one_value[4096];
-void adc_start();
-void adc_stop();
-void adc_get_value();
+void startADC();
+void stopADC();
+void ADCGetValue();
 #endif /* __ADC_SET_H */
 

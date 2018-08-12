@@ -162,7 +162,8 @@ Src/adc_set.c \
 Src/console.c \
 Src/flash.c \
 Src/eth.c \
-Src/lcd.c \
+Src/lcd2004a.c \
+Src/hts221.c \
 Middlewares/Third_Party/LwIP/src/netif/ppp/pppcrypt.c \
 Middlewares/Third_Party/LwIP/src/api/netbuf.c \
 Middlewares/Third_Party/FreeRTOS/Source/event_groups.c \

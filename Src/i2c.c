@@ -53,7 +53,12 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
-
+/*It is necessary in case the display is not one,
+ * but several at different addresses and ports.*/
+struct communicationParameters{
+  I2C_HandleTypeDef* i2cPortMaster;
+  uint8_t adressSlave;
+};
 /* USER CODE END 0 */
 
 I2C_HandleTypeDef hi2c2;

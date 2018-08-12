@@ -1,8 +1,9 @@
 ﻿#include "lcd2004a.h"
 
 uint8_t buf[1]={0};
+/*The cell for storing the data of the port of the expansion chip.*/
+uint8_t portIOLCDAdapter;
 
-uint8_t portIOLCDAdapter; //The cell for storing the data of the port of the expansion chip.
 void LCD_WriteByteI2CLCD(struct communicationParameters CommParam, uint8_t bt)
 {
 	buf[0]=bt;
@@ -41,7 +42,7 @@ void LCD_SendChar(struct communicationParameters CommParam, char ch)
 	SendByte(CommParam, ch, 1);
 }
 
-void LCD_Clear(struct communicationParameters CommParam){//Очистка дисплея и ввод сначала
+void LCD_Clear(struct communicationParameters CommParam){
 	SendByte(CommParam, 0x1,0);
     HAL_Delay(1);
 }
@@ -96,8 +97,8 @@ void LCD_ini(struct communicationParameters CommParam)
     LCD_Clear(CommParam);
 	LCD_EntyModeSet(CommParam);
 	HAL_Delay(1);
-	setled();//Led on.
-	setwrite();//Write on.
+	setled();
+	setwrite();
 }
 
 void LCD_SetCursor(struct communicationParameters CommParam, uint8_t str, uint8_t num){

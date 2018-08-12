@@ -2,20 +2,20 @@
 
 extern ADC_HandleTypeDef hadc1;
 
-void adc_start(){
+void startADC(){
     HAL_ADC_Start(&hadc1);
     HAL_ADC_Start_DMA (&hadc1, (uint32_t*)adc_data, NUM);
     HAL_TIM_Base_Start(&htim2);
-    uart_send("adc is started\n\r",16);
+    sendingToUART("adc is started\n\r",16);
 }
 
-void adc_stop(){
+void stopADC(){
     HAL_ADC_Stop_DMA(&hadc1);
     HAL_ADC_Stop(&hadc1);
-    uart_send("adc is stoped\n\r",15);
+    sendingToUART("adc is stoped\n\r",15);
 }
 
-void adc_get_value(){
+void ADCGetValue(){
     for (int i =NUM-1; i>0; i--){
         printf(" %" PRIu32"" ,adc_data[i-1]);
         printf("\n");

@@ -8,10 +8,8 @@
 
 #define AMOUNT_OF_POINTS 2500
 
-static uint16_t sine[AMOUNT_OF_POINTS * 4];
-
-void dac_set();
-void dac_start();
-void dac_stop();
+void DACSet();
+void DACStart();
+void DACStop();
 
 #endif /* __DAC_SET_H */  

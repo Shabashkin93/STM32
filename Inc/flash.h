@@ -17,8 +17,8 @@
 #include "lwip/api.h"
 #include "console.h"
 
-void flash_write_test();
-void flash_read_test(void (*transfer)(char *str, size_t size));
-void flash_erase_test();
+void flashWriteTest();
+void flashReadTest(void (*transfer)(char *str, size_t size));
+void flashEraseTest();
 
 #endif

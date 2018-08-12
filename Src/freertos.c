@@ -54,7 +54,7 @@
 /* USER CODE BEGIN Includes */     
 #include "flash.h"
 #include "console.h"
-#include "lcd.h"
+#include "lcd2004a.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -62,7 +62,10 @@ osThreadId defaultTaskHandle;
 osThreadId myTask02Handle;
 
 /* USER CODE BEGIN Variables */
-extern values_ring_buffer uartc_3;
+extern RingBuffer uartc_3;
+extern I2C_HandleTypeDef hi2c2;
+char str[40];
+struct communicationParameters LCD_1 = {&hi2c2, 0x27};
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
@@ -73,7 +76,7 @@ extern void MX_LWIP_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* USER CODE BEGIN FunctionPrototypes */
-extern void tcpecho(void);
+extern void tcpEcho(void);
 /* USER CODE END FunctionPrototypes */
 
 /* Hook prototypes */
@@ -123,27 +126,26 @@ void StartDefaultTask(void const * argument)
 
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
-  tcpecho();
+  tcpEcho();
   
-  char str[100];
-  LCD_ini();
-	sprintf(str,"Stm32F407VG");
-	LCD_String(str);
-	LCD_SetPos(10, 2);
-	sprintf(str,"ARM mc");
-	LCD_String(str);
-	HAL_Delay(2000);
-	LCD_Clear();
-	LCD_SetPos(4, 0);
-	LCD_SendChar('s');
-	LCD_SetPos(8, 1);
-	LCD_SendChar('t');
-	LCD_SetPos(12, 2);
-	LCD_SendChar('m');
-	LCD_SetPos(16, 3);
-	LCD_SendChar('3');
-	LCD_SendChar('2');
-	HAL_Delay(2000);
+/*  char str[100];
+  LCD_ini(LCD_1);
+  sprintf(str,"STM32F767ZI");
+      LCD_String(LCD_1, str);
+      LCD_SetCursor(LCD_1, 3, 0);
+      sprintf(str,"Nucleo");
+      LCD_String(LCD_1, str);
+      HAL_Delay(2000);
+      LCD_Clear(LCD_1);
+      LCD_SetCursor(LCD_1, 0, 4);
+      LCD_SendChar(LCD_1, 's');
+      LCD_SetCursor(LCD_1, 1, 8);
+      LCD_SendChar(LCD_1, 't');
+      LCD_SetCursor(LCD_1, 2, 12);
+      LCD_SendChar(LCD_1, 'm');
+      LCD_SetCursor(LCD_1, 3, 16);
+      LCD_SendChar(LCD_1, '3');
+      LCD_SendChar(LCD_1, '2');*/
   /* USER CODE END StartDefaultTask */
 }
 
@@ -152,9 +154,9 @@ void StartTask02(void const * argument)
 {
   /* USER CODE BEGIN StartTask02 */
     for(;;){
-        console_uart(&uartc_3,uart_send);
+        handlerCLIUART(&uartc_3, sendingToUART);
         for(int i =65535; i>0; i--){
-            TIM4->CCR2=i;//для PWM , изменяется скважность
+            TIM4->CCR2=i;/* для PWM , изменяется скважность*/
         }
         osDelay(1);
     }

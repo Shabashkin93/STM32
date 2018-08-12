@@ -16,9 +16,9 @@
 #include "lwip/arch.h"
 #include "lwip/api.h"
 
-void eth_send(char *str, size_t size);
-void tcpecho(void);
-void tcpcounter(void);
+void ethSend(char *str, size_t size);
+void tcpEcho(void);
+void tcpCounter(void);
 struct netconn *conn, *newconn;
 
 #endif

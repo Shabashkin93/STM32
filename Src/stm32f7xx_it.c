@@ -37,15 +37,8 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN 0 */
-int tim6FlagInterrupt = 0;// if this value is 0 then the interrupt for tim6 is enabled, if this value is 1 then the interrupts for tim6 are off
-
-extern uint8_t buf;
-extern uint8_t no_reset;
-extern uint8_t rx_buf[];
-extern uint8_t idxIN;
-extern uint8_t buff;
-/* USER CODE END 0 */
-
+int tim6InterruptOn = 0;
+extern uint8_t noWWDGReset;
 /* External variables --------------------------------------------------------*/
 extern ETH_HandleTypeDef heth;
 extern DMA_HandleTypeDef hdma_adc1;
@@ -92,7 +85,7 @@ void SysTick_Handler(void)
 void WWDG_IRQHandler(void)
 {
   /* USER CODE BEGIN WWDG_IRQn 0 */
-    if (no_reset)
+    if (noWWDGReset)
         HAL_WWDG_Refresh(&hwwdg);
   /* USER CODE END WWDG_IRQn 0 */
   HAL_WWDG_IRQHandler(&hwwdg);
@@ -299,16 +292,17 @@ void ETH_WKUP_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){//interrupt handler for the button
+/*interrupt handler for the button*/
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
     if (GPIO_Pin == GPIO_PIN_13){
-        if (tim6FlagInterrupt){
+        if (tim6InterruptOn){
             HAL_TIM_Base_Stop_IT(&htim6);
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
-            tim6FlagInterrupt=0;
+            tim6InterruptOn=0;
         }
         else{
             HAL_TIM_Base_Start_IT(&htim6);
-            tim6FlagInterrupt=1;
+            tim6InterruptOn=1;
         }
     }
 }

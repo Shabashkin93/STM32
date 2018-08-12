@@ -70,7 +70,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-values_ring_buffer uartc_3;
+RingBuffer uartc_3;
 uint8_t data[2];
 
 /* Private variables ---------------------------------------------------------*/
@@ -99,7 +99,7 @@ void MX_FREERTOS_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-    console_uart_init(&uartc_3);
+    initCLIUART(&uartc_3);
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -133,11 +133,11 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start(&htim6);
   HAL_TIM_Base_Start_IT(&htim6);
-  dac_set();
-  dac_start();
-  adc_start();
-  HAL_UART_Transmit(&huart3, start_msg,strlen(start_msg),100);
-  HAL_UART_Receive_IT(&huart3, &uartc_3.buf, 1);
+  DACSet();
+  DACStart();
+  startADC();
+  HAL_UART_Transmit(&huart3, startMessage,strlen(startMessage),100);
+  HAL_UART_Receive_IT(&huart3, &uartc_3.receivedSymbol, 1);
   data[0]='A';
   data[1]='B';
   HAL_I2C_Master_Receive(&hi2c2, 0x4E, data, 2, 50);
@@ -242,7 +242,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
   if(UartHandle->Instance == USART3) {
       monitor(&uartc_3);
-      HAL_UART_Receive_IT(&huart3, &uartc_3.buf, 1);
+      HAL_UART_Receive_IT(&huart3, &uartc_3.receivedSymbol, 1);
   } 
 }
 /* USER CODE END 4 */
