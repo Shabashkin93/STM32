@@ -4,9 +4,8 @@
 extern UART_HandleTypeDef huart3;
 extern TIM_HandleTypeDef htim4;
 uint8_t noWWDGReset=1;
-const char *tickValue[10];
-const char *startMessage="Nucleo launched\n\r";
-const char *helpAnswer = 
+const char *startMessage ="Nucleo launched\n\r";
+const char *helpAnswer =
     " Commands:\n"
     "reset -------reset controller\n"
     "ticks -------time in milliseconds\n"
@@ -17,22 +16,27 @@ const char *helpAnswer =
     "flash read  -read on 0x08100000\n"
     "flash erase -erase sector\n\r";
 
-void sendingToUART(char *str, size_t size) {
-    HAL_UART_Transmit(&huart3, str, size, 100);
+void sendingToUART(uint8_t *str, size_t size) {
+    char tempStr[size];
+    sprintf(tempStr, "%s", str);
+    HAL_UART_Transmit(&huart3, (uint8_t*)&tempStr, size, 100);
 }
 
 /*************************************************************************************************/
 
 
-void sendingHelpMessage(void (*transfer)(char *str, size_t size)){
-    transfer(helpAnswer,strlen(helpAnswer));
+void sendingHelpMessage(void (*transfer)(uint8_t *str, size_t size)){
+    char tempStr[strlen(helpAnswer)];
+    sprintf(tempStr, "%s", helpAnswer);
+    transfer((uint8_t*)&tempStr,strlen(helpAnswer));
 }
 
 /*************************************************************************************************/
 
-void sendingTickValue(void (*transfer)(char *str, size_t size)){
-    sprintf(tickValue, "%"PRIu32" ms \n\r", HAL_GetTick());
-    transfer(tickValue,13);
+void sendingTickValue(void (*transfer)(uint8_t *str, size_t size)){
+    char tickValue[16];
+    sprintf(tickValue, "%" PRIu32 "ms" "\n\n", HAL_GetTick());
+    transfer((uint8_t*)&tickValue,16);
 }
 
 /*************************************************************************************************/
@@ -43,23 +47,29 @@ void rebootThisDevice(){
 
 /*************************************************************************************************/
 
-void toggleGreenLed(void (*transfer)(char *str, size_t size)){
+void toggleGreenLed(void (*transfer)(uint8_t *str, size_t size)){
         HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_0);
-        transfer("green led toggle\n\r",18);
+        char tempStr[18]={0};
+        sprintf(tempStr, "green led toggle\n\r");
+        transfer((uint8_t*)&tempStr,18);
 }
 
 /*************************************************************************************************/
 
-void startPWM(void (*transfer)(char *str, size_t size)){
+void startPWM(void (*transfer)(uint8_t *str, size_t size)){
         HAL_TIM_PWM_Start_IT (&htim4,TIM_CHANNEL_2);
-        transfer("blue pwm start\n\r",16);
+        char tempStr[16]={0};
+        sprintf(tempStr, "blue pwm start\n\r");
+        transfer((uint8_t*)&tempStr,16);
 }
 
 /*************************************************************************************************/
 
-void stopPWM(void (*transfer)(char *str, size_t size)){
+void stopPWM(void (*transfer)(uint8_t *str, size_t size)){
         HAL_TIM_PWM_Stop_IT (&htim4,TIM_CHANNEL_2);
-        transfer("blue pwm stop\n\r",15);
+        char tempStr[15]={0};
+        sprintf(tempStr, "blue pwm stop\n\r");
+        transfer((uint8_t*)&tempStr,15);
 }
 
 /*************************************************************************************************/
@@ -84,7 +94,7 @@ struct command commands[]={
     {"get adc", ADCGetValue},
     {"adc stop", stopADC},
     {"adc start", startADC},
-    {"hts", testTHS221}
+    {"hts", initHTS221}
 };
 
 /*************************************************************************************************/
@@ -104,7 +114,7 @@ void monitor(RingBuffer *options){
  * @param buffer - ring buffer receive data
  * @return None
  */
-void commandHandler(void (*transfer)(char *str, size_t size), uint8_t *buffer){
+void commandHandler(void (*transfer)(uint8_t *str, size_t size), uint8_t *buffer){
     for (int i=0;i<NUMBER_OF_COMMANDS;++i){
         if( !strncmp(commands[i].nameCommand, buffer, strlen(commands[i].nameCommand) )) {
             commands[i].command(transfer);
@@ -133,7 +143,7 @@ void initCLIUART(RingBuffer *options){
 
 /*распознание команды и выполнение функции в случае успешного распознания*/
 
-void handlerCLIUART(RingBuffer *options, void (*transfer)(char *str, size_t size)){
+void handlerCLIUART(RingBuffer *options, void (*transfer)(uint8_t *str, size_t size)){
     if(options->commandWasRead){
         for(int i=0; i < options->lengthReceivedMessage; i++){
             options->commandBuffer[i]=options->circularReceiveBuffer[options->idxOUT++];

@@ -36,15 +36,15 @@ typedef struct {
 } RingBuffer;
 
 void initCLIUART(RingBuffer *options);
-void sendingHelpMessage(void (*transfer)(char *str, size_t size));
-void sendingTickValue(void (*transfer)(char *str, size_t size));
+void sendingHelpMessage(void (*transfer)(uint8_t *str, size_t size));
+void sendingTickValue(void (*transfer)(uint8_t *str, size_t size));
 void rebootThisDevice();
-void toggleGreenLed(void (*transfer)(char *str, size_t size));
-void startPWM(void (*transfer)(char *str, size_t size));
-void stopPWM(void (*transfer)(char *str, size_t size));
+void toggleGreenLed(void (*transfer)(uint8_t *str, size_t size));
+void startPWM(void (*transfer)(uint8_t *str, size_t size));
+void stopPWM(void (*transfer)(uint8_t *str, size_t size));
 void monitor(RingBuffer *options);
-void handlerCLIUART(RingBuffer *options,void (*transfer)(char *str, size_t size));
-void sendingToUART(char *str, size_t size);
-void commandHandler(void (*transfer)(char *str, size_t size), uint8_t *str);
+void handlerCLIUART(RingBuffer *options,void (*transfer)(uint8_t *str, size_t size));
+void sendingToUART(uint8_t *str, size_t size);
+void commandHandler(void (*transfer)(uint8_t *str, size_t size), uint8_t *str);
 void postHandler(RingBuffer *options);
 #endif /* __CONSOLE_H */

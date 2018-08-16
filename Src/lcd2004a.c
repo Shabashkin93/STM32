@@ -2,7 +2,7 @@
 
 uint8_t buf[1]={0};
 /*The cell for storing the data of the port of the expansion chip.*/
-uint8_t portIOLCDAdapter;
+uint8_t portIOLCDAdapter = 0;
 
 void LCD_WriteByteI2CLCD(struct communicationParameters CommParam, uint8_t bt)
 {
